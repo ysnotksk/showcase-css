@@ -1,0 +1,31 @@
+{
+  "name": "showcase-css",
+  "version": "1.0.0",
+  "description": "Lightweight CSS spotlight effect that follows the mouse cursor. Zero dependencies.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "spotlight",
+    "mouse",
+    "cursor",
+    "css",
+    "radial-gradient",
+    "hover-effect",
+    "vanilla-js"
+  ],
+  "author": "Yosh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ysnotksk/showcase-css.git"
+  }
+}
