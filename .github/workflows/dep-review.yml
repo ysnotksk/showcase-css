@@ -1,5 +1,8 @@
 # Pillar 3: Supply Chain Provenance — review dependency changes on PRs.
-# Uses GitHub's official dependency-review-action; requires Dependency Graph enabled (free).
+# Uses GitHub's official dependency-review-action.
+# Requirements: Dependency Graph enabled (free for public repos; paid GHAS on private).
+# This workflow self-skips on private repos to avoid the "Dependency review is not
+# supported on this repository" hard-error you'd otherwise get on every PR.
 # Reference (primary): https://github.com/actions/dependency-review-action
 
 name: Dependency Review
@@ -14,6 +17,9 @@ permissions:
 
 jobs:
   review:
+    # Skip on private repos without GHAS — dep-review-action requires either public
+    # visibility or paid GitHub Advanced Security to access the Dependency Graph API.
+    if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
