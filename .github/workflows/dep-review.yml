@@ -1,0 +1,23 @@
+# Pillar 3: Supply Chain Provenance — review dependency changes on PRs.
+# Uses GitHub's official dependency-review-action; requires Dependency Graph enabled (free).
+# Reference (primary): https://github.com/actions/dependency-review-action
+
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          comment-summary-in-pr: on-failure
+          fail-on-severity: high
