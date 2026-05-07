@@ -1,0 +1,15 @@
+# Dependabot — keep SHA-pinned third-party Actions current.
+# Pillar 3 (Software Supply Chain Provenance): we pin Actions to commit SHA
+# to defend against the tj-actions/changed-files class of attack (mutable tags).
+# Dependabot opens PRs when newer SHAs ship, so the pin doesn't decay into stale.
+# Reference (primary): https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "ci(actions)"
+    open-pull-requests-limit: 5
