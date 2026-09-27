@@ -1,10 +1,5 @@
-# Pillar 3: Supply Chain Provenance — CycloneDX SBOM generation on release.
-# Uses Anchore's official syft action; supports npm, pypi, go, cargo, maven, ruby, composer, etc.
-# Posture: enabled in Team and Enterprise; Solo can opt in by setting the workflow on:
-#   release:
-#     types: [published]
-# Reference (primary): https://github.com/anchore/sbom-action
-
+# ci-kit v1 (ysnotksk/ci-kit): edit there and re-sync, not here.
+# CycloneDX SBOM on each published release (Anchore's syft action).
 name: SBOM
 
 on:
@@ -13,21 +8,20 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   cyclonedx:
     name: Generate CycloneDX SBOM
     runs-on: ubuntu-latest
-    permissions:
-      contents: write  # release assets only; the workflow itself stays read
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
       - name: Generate SBOM (CycloneDX JSON)
-        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
         with:
           format: cyclonedx-json
           output-file: sbom.cdx.json
