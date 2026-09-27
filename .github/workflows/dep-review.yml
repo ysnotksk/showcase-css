@@ -1,28 +1,47 @@
-# Pillar 3: Supply Chain Provenance — review dependency changes on PRs.
-# Uses GitHub's official dependency-review-action.
-# Requirements: Dependency Graph enabled (free for public repos; paid GHAS on private).
-# This workflow self-skips on private repos to avoid the "Dependency review is not
-# supported on this repository" hard-error you'd otherwise get on every PR.
-# Reference (primary): https://github.com/actions/dependency-review-action
-
+# ci-kit v1 (ysnotksk/ci-kit): edit there and re-sync, not here.
+# Reviews dependency changes on PRs with GitHub's dependency-review-action.
+# It needs the Dependency Graph API: free on public repositories, paid GHAS on
+# private ones, so the job skips itself on private repositories (a skipped job
+# uses no minutes). It runs only when a dependency manifest or workflow changes.
 name: Dependency Review
 
 on:
   pull_request:
     branches: [main]
+    paths:
+      - "**/package.json"
+      - "**/package-lock.json"
+      - "**/pnpm-lock.yaml"
+      - "**/yarn.lock"
+      - "**/requirements*.txt"
+      - "**/pyproject.toml"
+      - "**/poetry.lock"
+      - "**/uv.lock"
+      - "**/Gemfile"
+      - "**/Gemfile.lock"
+      - "**/Package.swift"
+      - "**/Package.resolved"
+      - "**/go.mod"
+      - "**/go.sum"
+      - "**/Cargo.toml"
+      - "**/Cargo.lock"
+      - ".github/workflows/**"
 
 permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: dep-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   review:
-    # Skip on private repos without GHAS — dep-review-action requires either public
-    # visibility or paid GitHub Advanced Security to access the Dependency Graph API.
     if: ${{ !github.event.repository.private }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
